@@ -12,7 +12,7 @@ namespace Netcover::INI
             Worker(std::string file) : file(file) { }
             void read();
             void save();
-            std::unordered_map<std::string, std::unordered_map<std::string, std::string>>& getFileMap() { return fileMap; }
+            std::unordered_map<std::string, std::unordered_map<std::string, std::string>>& operator*() { return fileMap; }
 
         private:
             std::unordered_map<std::string, std::unordered_map<std::string, std::string>> fileMap;
