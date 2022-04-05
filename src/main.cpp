@@ -1,13 +1,4 @@
-#include <iostream>
-
-#include <netcover/buffers/Buffer.h>
-#include <netcover/sockets/raw/TCPv4Socket.h>
-
-using namespace Netcover;
-
-int main()
+int main(void)
 {
-    
-
     return 0;
 }
