@@ -2,5 +2,5 @@
 
 namespace Netcover::Tools::String
 {
-    void trim(std::string str);
+    void trim(std::string& str);
 }
