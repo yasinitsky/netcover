@@ -7,7 +7,11 @@ namespace Netcover::Exceptions::INI
 {
     class IncorrectFormatException : public Exception
     {
-        using Exception::Exception;
+        public:
+            IncorrectFormatException(const char* description, int err = 0, int line = 0) : description((char*) description), err(err), line(line) {}
+            int lineID() { return line; }
+        private:
+            int line;
     }
 }
 
