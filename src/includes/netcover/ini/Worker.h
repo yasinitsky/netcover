@@ -17,8 +17,6 @@ namespace Netcover::INI
         private:
             std::unordered_map<std::string, std::unordered_map<std::string, std::string>> fileMap;
             std::string file;
-
-            void trimString(std::string& string);
     };
 }
 
