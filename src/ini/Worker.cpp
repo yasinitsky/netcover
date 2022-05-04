@@ -31,7 +31,7 @@ void Worker::read()
 
         if(line.length() == 0) continue;
 
-        if(line[0] == ';')
+        if(line[0] == ';') // line defines comment
         {
             continue;
         }
@@ -45,7 +45,10 @@ void Worker::read()
         else // line defines parameter
         {
             if(section.length() == 0)
+            {
+                inFile.close();
                 throw Exceptions::INI::IncorrectFormatException("Field defined outside of section.", Errors::FIELD_OUTSIDE_SECTION, lineCounter);
+            }
 
             std::string key, value;
 
@@ -58,16 +61,52 @@ void Worker::read()
             Tools::String::trim(key);
 
             if(key.length() == 0)
+            {
+                inFile.close();
                 throw Exceptions::INI::IncorrectFormatException("Field defined without key.", Errors::KEY_EMPTY, lineCounter);
+            }
 
             value = line;
             value.erase(0, i+1);
             Tools::String::trim(value);
 
             if(value.length() == 0)
+            {
+                inFile.close();
                 throw Exceptions::INI::IncorrectFormatException("Field defined without value.", Errors::VALUE_EMPTY, lineCounter);
+            }
 
             fileMap[section][key] = value;
         }
     }
+}
+
+void Worker::save()
+{
+    std::ofstream outFile(file);
+
+    if(!outFile.is_open())
+    {
+        throw Exceptions::General::SyscallException("Cannot open file.");
+    }
+
+    for(auto section : fileMap)
+    {
+        if(section.first.length() == 0)
+            continue;
+
+        outFile << "[" << section.first << "]" << std::endl;
+
+        for(auto field : section.second)
+        {
+            if(field.first.length() == 0 || field.second.length() == 0)
+                continue;
+
+            outFile << field.first << " = " << field.second << std::endl;
+        }
+
+        outFile << std::endl;
+    }
+
+    outFile.close();
 }
