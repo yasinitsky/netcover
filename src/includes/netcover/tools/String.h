@@ -9,6 +9,7 @@
 namespace Netcover::Tools::String
 {
     void trim(std::string& str);
+    void pop_front(std::string& str);
 }
 
 #endif
