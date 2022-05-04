@@ -10,9 +10,11 @@ namespace Netcover::INI
     {
         public:
             Worker(std::string file) : file(file) { }
+            void setFile(std::string file) { this->file = file; }
             void read();
             void save();
             std::unordered_map<std::string, std::unordered_map<std::string, std::string>>& operator*() { return fileMap; }
+            std::unordered_map<std::string, std::string>& operator[](std::string section) { return fileMap[section]; }
 
         private:
             std::unordered_map<std::string, std::unordered_map<std::string, std::string>> fileMap;
