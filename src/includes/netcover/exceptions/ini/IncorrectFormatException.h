@@ -8,11 +8,11 @@ namespace Netcover::Exceptions::INI
     class IncorrectFormatException : public Exception
     {
         public:
-            IncorrectFormatException(const char* description, int err = 0, int line = 0) : description((char*) description), err(err), line(line) {}
+            IncorrectFormatException(const char* description, int err = 0, int line = 0) : Exception(description, err), line(line) {}
             int lineID() { return line; }
         private:
             int line;
-    }
+    };
 }
 
 #endif
