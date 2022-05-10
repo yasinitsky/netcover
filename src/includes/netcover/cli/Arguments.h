@@ -8,7 +8,10 @@ namespace Netcover::CLI
     {
         public:
             Arguments(int argc, char* argv[]);
+            void parseFlags();
+            std::vector<std::string> operator*() { return flags; }
         private:
             std::vector<std::string> args;
+            std::vector<std::string> flags;
     };
 }
