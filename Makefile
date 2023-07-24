@@ -20,12 +20,12 @@ MKDIR = mkdir
 RM = rm
 
 # Configuration
-CXX_FLAGS = -Wall -pedantic
-
-INCLUDE_DIR = $(SOURCE_DIR)
+CXX_FLAGS = -Wall -pedantic -std=c++17
 
 SOURCE_DIR = src
-SOURCE_FILES = main.cpp
+SOURCE_FILES 	= main.cpp
+
+INCLUDE_DIR = $(SOURCE_DIR)
 
 BUILD_DIR = build
 OBJECT_DIRS = $(foreach file,$(SOURCE_FILES),$(BUILD_DIR)/$(dir $(file)))
@@ -35,18 +35,18 @@ TARGET = netcover
 
 # Recipes
 .PHONY: build
-build: create-dirs compile-objects link-objects
+build: link-objects
 
 .PHONY: compile-objects
-compile-objects: $(OBJECT_FILES)
+compile-objects: create-dirs $(OBJECT_FILES)
 
 .PHONY: create-dirs
 create-dirs:
 	$(MKDIR) -p $(OBJECT_DIRS)
 
 .PHONY: link-objects
-link-objects: $(OBJECT_FILES)
-	$(CXX) $^ -o $(BUILD_DIR)/netcover
+link-objects: compile-objects
+	$(CXX) $(OBJECT_FILES) -o $(BUILD_DIR)/netcover
 
 .PHONY: cleanup
 cleanup:
