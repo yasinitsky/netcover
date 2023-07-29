@@ -15,42 +15,36 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Tools
-CXX = g++
-MKDIR = mkdir
-RM = rm
+CXX 	= g++
+MKDIR 	= mkdir
+RM 		= rm
+FIND	= find
 
-# Configuration
-CXX_FLAGS = -Wall -pedantic -std=c++17
+# Build process
+CXX_FLAGS 		= -Wall -pedantic -std=c++17 -c
+BUILD_ROOT		= build
+SOURCE_ROOT 	= src
 
-SOURCE_DIR = src
-SOURCE_FILES 	= main.cpp
+SOURCE_FILES	= $(shell $(FIND) $(SOURCE_ROOT) -type f -name *.cpp)
+SOURCE_OBJECTS	= $(foreach file,$(SOURCE_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
+SOURCE_INCLUDE	= $(SOURCE_ROOT)
+SOURCE_HEADERS	= $(shell $(FIND) $(SOURCE_INCLUDE) -type f -name *.hpp)
+SOURCE_TARGET	= $(BUILD_ROOT)/netcover
 
-INCLUDE_DIR = $(SOURCE_DIR)
+BUILD_TREE = $(SOURCE_DIRS)
 
-BUILD_DIR = build
-OBJECT_DIRS = $(foreach file,$(SOURCE_FILES),$(BUILD_DIR)/$(dir $(file)))
-OBJECT_FILES = $(foreach file,$(SOURCE_FILES),$(BUILD_DIR)/$(basename $(file)).o)
+.SUFFIXES:
 
-TARGET = netcover
-
-# Recipes
 .PHONY: build
-build: link-objects
+build: $(SOURCE_TARGET)
 
-.PHONY: compile-objects
-compile-objects: create-dirs $(OBJECT_FILES)
+$(SOURCE_TARGET): $(SOURCE_OBJECTS)
+	$(CXX) $^ -o $(SOURCE_TARGET)
 
-.PHONY: create-dirs
-create-dirs:
-	$(MKDIR) -p $(OBJECT_DIRS)
-
-.PHONY: link-objects
-link-objects: compile-objects
-	$(CXX) $(OBJECT_FILES) -o $(BUILD_DIR)/netcover
+$(BUILD_ROOT)/$(SOURCE_ROOT)/%.o: $(SOURCE_ROOT)/%.cpp $(SOURCE_HEADERS)
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(CXX_FLAGS) $(foreach file,$(SOURCE_INCLUDE),-I$(file)) $< -o $@
 
 .PHONY: cleanup
 cleanup:
-	$(RM) -rf $(BUILD_DIR)
-
-$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
-	$(CXX) $(CXX_FLAGS) -c -I$(INCLUDE_DIR) $< -o $@
+	$(RM) -rf $(BUILD_ROOT)
