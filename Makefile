@@ -46,11 +46,11 @@ SOURCE_TARGET   = $(BUILD_ROOT)/netcover
 build: $(SOURCE_TARGET)
 
 $(SOURCE_TARGET): $(SOURCE_OBJECTS)
-    $(CXX) $^ -o $@
+	$(CXX) $^ -o $@
 
 $(BUILD_ROOT)/$(SOURCE_ROOT)/%.o: $(SOURCE_ROOT)/%.cpp $(SOURCE_HEADERS)
-    @$(MKDIR) -p $(dir $@)
-    $(CXX) $(CXXFLAGS) $(foreach file,$(SOURCE_INCLUDE),-I$(file)) $< -o $@
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(foreach file,$(SOURCE_INCLUDE),-I$(file)) $< -o $@
 
 # Build gtest
 GTEST_ROOT      = 3rdparty/googletest
@@ -61,12 +61,12 @@ GTEST_INCLUDE   = $(GTEST_ROOT) $(GTEST_ROOT)/include
 GTEST_LIB       = $(BUILD_ROOT)/$(GTEST_ROOT)/libgtest.a
 
 $(GTEST_LIB): $(GTEST_OBJECTS)
-    $(AR) rsc $@ $^
+	$(AR) rsc $@ $^
 
 # Don't add gtest headers dependency, because we won't change it
 $(BUILD_ROOT)/$(GTEST_ROOT)/%.o: $(GTEST_ROOT)/%.cc
-    @$(MKDIR) -p $(dir $@)
-    $(CXX) $(CXXFLAGS) $(foreach file,$(GTEST_INCLUDE),-I$(file)) $^ -o $@
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(foreach file,$(GTEST_INCLUDE),-I$(file)) $^ -o $@
 
 # Build and run unittests
 TEST_ROOT       = test
@@ -78,16 +78,16 @@ TEST_TARGET     = $(BUILD_ROOT)/$(TEST_ROOT)/test.out
 
 .PHONY: test
 test: $(TEST_TARGET)
-    @./$(TEST_TARGET)
+	@./$(TEST_TARGET)
 
 $(TEST_TARGET): $(GTEST_LIB) $(TEST_OBJECTS)
-    $(CXX) $(TEST_OBJECTS) -o $@ -L$(dir $(GTEST_LIB)) -lgtest
+	$(CXX) $(TEST_OBJECTS) -o $@ -L$(dir $(GTEST_LIB)) -lgtest
 
 $(BUILD_ROOT)/$(TEST_ROOT)/%.o: $(TEST_ROOT)/%.cpp $(TEST_HEADERS)
-    @$(MKDIR) -p $(dir $@)
-    $(CXX) $(CXXFLAGS) $(foreach file,$(TEST_INCLUDE),-I$(file)) $< -o $@
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(foreach file,$(TEST_INCLUDE),-I$(file)) $< -o $@
 
 # Cleanup
 .PHONY: cleanup
 cleanup:
-    $(RM) -rf $(BUILD_ROOT)
+	$(RM) -rf $(BUILD_ROOT)
