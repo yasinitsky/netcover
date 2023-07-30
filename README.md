@@ -1,6 +1,7 @@
-# Build from source
-To build a project from source, simply run `make build`. As a result, you will get `build/netcover` executable.<br/>
-To clean up the project folder after build, use `make cleanup` (`build/netcover` executable will be deleted too).
+# Build and test
+To build a project from source, run `make build`. As a result, you will get `build/netcover` executable.<br/>
+To build and run unittests, run `make test`.<br/>
+To clean up the build folder, use `make cleanup`.
 # License
 ```
 Netcover is free software; you can redistribute it and/or modify it under
