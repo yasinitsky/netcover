@@ -15,9 +15,9 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # SYNOPSIS:
-#	make build		- build netcover executable (result is build/netcover)
-# 	make test 		- build and run unittests
-#	make cleanup	- clean build directory
+#	make build      - build netcover executable (result is build/netcover)
+# 	make test       - build and run unittests
+#	make cleanup    - clean build directory
 
 # Tools
 CXX     = g++
