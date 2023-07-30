@@ -20,29 +20,27 @@
 #	make cleanup	- clean build directory
 
 # Tools
-CXX 	= g++
-MKDIR 	= mkdir
-RM 		= rm
-FIND	= find
-AR		= ar
+CXX     = g++
+MKDIR   = mkdir
+RM      = rm
+FIND    = find
+AR      = ar
 
 # Options
-CXXFLAGS 	= -Wall -pedantic -std=c++17 -c
+CXXFLAGS    = -Wall -pedantic -std=c++17 -c
 
-BUILD_ROOT	= build
+BUILD_ROOT  = build
 
 .SUFFIXES:
 
 # Build executable
-SOURCE_ROOT 	= src
-SOURCE_FILES	= $(shell $(FIND) $(SOURCE_ROOT) -type f -name *.cpp)
-SOURCE_OBJECTS	= $(foreach file,$(SOURCE_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
-SOURCE_MAIN 	= $(BUILD_ROOT)/$(SOURCE_ROOT)/main.cpp
-SOURCE_INCLUDE	= $(SOURCE_ROOT)
-SOURCE_HEADERS	= $(shell $(FIND) $(SOURCE_INCLUDE) -type f -name *.hpp)
-SOURCE_TARGET	= $(BUILD_ROOT)/netcover
-
-BUILD_TREE = $(SOURCE_DIRS)
+SOURCE_ROOT     = src
+SOURCE_FILES    = $(shell $(FIND) $(SOURCE_ROOT) -type f -name *.cpp)
+SOURCE_OBJECTS  = $(foreach file,$(SOURCE_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
+SOURCE_MAIN     = $(BUILD_ROOT)/$(SOURCE_ROOT)/main.cpp
+SOURCE_INCLUDE  = $(SOURCE_ROOT)
+SOURCE_HEADERS  = $(shell $(FIND) $(SOURCE_INCLUDE) -type f -name *.hpp)
+SOURCE_TARGET   = $(BUILD_ROOT)/netcover
 
 .PHONY: build
 build: $(SOURCE_TARGET)
@@ -55,12 +53,12 @@ $(BUILD_ROOT)/$(SOURCE_ROOT)/%.o: $(SOURCE_ROOT)/%.cpp $(SOURCE_HEADERS)
     $(CXX) $(CXXFLAGS) $(foreach file,$(SOURCE_INCLUDE),-I$(file)) $< -o $@
 
 # Build gtest
-GTEST_ROOT		= 3rdparty/googletest
-GTEST_SRC		= $(GTEST_ROOT)/src
-GTEST_FILES		= $(GTEST_SRC)/gtest_main.cc $(GTEST_SRC)/gtest-all.cc
-GTEST_OBJECTS	= $(foreach file,$(GTEST_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
-GTEST_INCLUDE	= $(GTEST_ROOT) $(GTEST_ROOT)/include
-GTEST_LIB		= $(BUILD_ROOT)/$(GTEST_ROOT)/libgtest.a
+GTEST_ROOT      = 3rdparty/googletest
+GTEST_SRC       = $(GTEST_ROOT)/src
+GTEST_FILES     = $(GTEST_SRC)/gtest_main.cc $(GTEST_SRC)/gtest-all.cc
+GTEST_OBJECTS   = $(foreach file,$(GTEST_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
+GTEST_INCLUDE   = $(GTEST_ROOT) $(GTEST_ROOT)/include
+GTEST_LIB       = $(BUILD_ROOT)/$(GTEST_ROOT)/libgtest.a
 
 $(GTEST_LIB): $(GTEST_OBJECTS)
     $(AR) rsc $@ $^
@@ -71,12 +69,12 @@ $(BUILD_ROOT)/$(GTEST_ROOT)/%.o: $(GTEST_ROOT)/%.cc
     $(CXX) $(CXXFLAGS) $(foreach file,$(GTEST_INCLUDE),-I$(file)) $^ -o $@
 
 # Build and run unittests
-TEST_ROOT		= test
-TEST_FILES		= $(shell $(FIND) $(TEST_ROOT) -type f -name *.cpp)
-TEST_OBJECTS	= $(foreach file,$(TEST_FILES),$(BUILD_ROOT)/$(basename $(file)).o) $(filter-out $(basename $(SOURCE_MAIN)).o,$(SOURCE_OBJECTS))
-TEST_INCLUDE	= $(SOURCE_INCLUDE) $(GTEST_INCLUDE)
-TEST_HEADERS	= $(SOURCE_HEADERS)
-TEST_TARGET		= $(BUILD_ROOT)/$(TEST_ROOT)/test.out
+TEST_ROOT       = test
+TEST_FILES      = $(shell $(FIND) $(TEST_ROOT) -type f -name *.cpp)
+TEST_OBJECTS    = $(foreach file,$(TEST_FILES),$(BUILD_ROOT)/$(basename $(file)).o) $(filter-out $(basename $(SOURCE_MAIN)).o,$(SOURCE_OBJECTS))
+TEST_INCLUDE    = $(SOURCE_INCLUDE) $(GTEST_INCLUDE)
+TEST_HEADERS    = $(SOURCE_HEADERS)
+TEST_TARGET     = $(BUILD_ROOT)/$(TEST_ROOT)/test.out
 
 .PHONY: test
 test: $(TEST_TARGET)
