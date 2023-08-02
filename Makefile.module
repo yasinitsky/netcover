@@ -1,0 +1,88 @@
+# Copyright (C) 2023 Yaroslav Yasynytskyi.
+# This file is part of Netcover.
+#
+# Netcover is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 3 of the License, or (at your option) any later
+# version.
+#
+# Netcover is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This file contains common build logic for a single module
+# In terms of Netcover, module is set of the files that should be compiled to the one target (executable or library)
+
+# MODULE is variable specified in command line option and should contain module name
+# Basically, module name is a path to directory with module-specific Makefile relative to the project root directory (e.g. 3rdparty/googletest)
+ifndef MODULE
+$(error MODULE variable should be provided)
+endif
+
+# Each module may specify variables below in module-specific Makefile
+SOURCE_FILES        =	# paths to the module's source files
+INCLUDE_DIRS 		=	# paths to the directories with internal includes used to compile module
+STATIC_LIBRARY 		=	# name of the static library we want to build (without "lib" at the begining and ".a" at the end)
+EXECUTABLE			=	# name of the executable we want to build 
+HEADERS				=	# paths to headers that can be shared with another modules ("public" headers)
+DEPENDENCIES		= 	# modules to be static linked with \
+						# if current module produces static library, then only headers from dependency will be shared \
+						# otherwise static library from dependency will be linked to the current module's executable
+CXXFLAGS            =   # C++ compiler flags (in addition to the one defined in the Makefile.config)
+
+# All the code below is the common rules for all modules. Module-specific Makefiles should not touch it
+MODULE_GETLIB		=	$(shell $(MODULE_MAKE) get-lib MODULE=$1)
+MODULE_GETHEADERS	= 	$(shell $(MODULE_MAKE) get-headers MODULE=$1)
+
+include Makefile.common
+include $(MODULE)/Makefile
+
+SOURCE_FILES := $(foreach file,$(SOURCE_FILES),$(MODULE)/$(file))
+INCLUDE_DIRS := $(foreach dir,$(INCLUDE_DIRS),$(MODULE)/$(dir)) \
+				$(foreach dir,$(DEPENDENCIES),$(call MODULE_GETHEADERS,$(dir)))
+
+OBJECT_FILES = $(foreach file,$(SOURCE_FILES),$(BUILD_ROOT)/$(basename $(file)).o)
+HEADER_FILES = $(foreach dir,$(INCLUDE_DIRS),$(shell $(FIND) $(dir) -type f -name *.h**))
+
+$(EXECUTABLE): $(OBJECT_FILES) $(DEPENDENCIES)
+	@$(ECHO) Building $(EXECUTABLE) executable...
+	@$(CXX) $(OBJECT_FILES) $(foreach dir,$(DEPENDENCIES),-L$(BUILD_ROOT)/$(dir)) \
+		$(foreach dir,$(DEPENDENCIES),-l$(notdir $(call MODULE_GETLIB,$(dir)))) \
+		-o $(BUILD_ROOT)/$(MODULE)/$@
+
+$(STATIC_LIBRARY): $(OBJECT_FILES)
+	@$(ECHO) Building $(STATIC_LIBRARY) library...
+	@$(AR) rcs $(BUILD_ROOT)/$(MODULE)/lib$(STATIC_LIBRARY).a $^
+
+$(BUILD_ROOT)/%.o: %.c* $(HEADER_FILES)
+	@$(ECHO) Compiling $@ object file...
+	@$(MKDIR) -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $< -o $@ $(foreach dir,$(INCLUDE_DIRS),-I$(dir))
+
+.PHONY: build-lib
+build-lib: $(STATIC_LIBRARY)
+
+.PHONY: build-executable
+build-executable: $(EXECUTABLE)
+
+.PHONY: get-lib
+get-lib:
+	@$(ECHO) $(MODULE)/$(STATIC_LIBRARY)
+
+.PHONY: get-headers
+get-headers:
+	@$(ECHO) $(MODULE)/$(HEADERS)
+
+.PHONY: get-executable
+get-executable:
+	@$(ECHO) $(MODULE)/$(EXECUTABLE)
+
+$(DEPENDENCIES): force
+	@$(MODULE_MAKE) build-lib MODULE=$@
+
+.PHONY: force
+force: ;

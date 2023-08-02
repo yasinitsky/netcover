@@ -14,24 +14,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This file is the main Makefile of the Netcover project
-# It encapsulates build details under the next commands:
-#		make run		- build and run netcover executable
-#		make test 		- build and run tests
-# 		make cleanup	- cleanup build directory
-# Another recipes shouldn't be used via make tool
-
-include Makefile.common
-
-.PHONY: run
-run: build
-	@./$(BUILD_ROOT)/$(shell $(MODULE_MAKE) get-executable MODULE=src)
-
-.PHONY: build
-build:
-	@$(MODULE_MAKE) build-executable MODULE=src
-
-.PHONY: test
-test:
-	@$(MODULE_MAKE) build-executable MODULE=test
-	@./$(BUILD_ROOT)/$(shell $(MODULE_MAKE) get-executable MODULE=test)
+SOURCE_FILES 	= # don't forget to add tests here
+EXECUTABLE		= tests.out
+DEPENDENCIES 	= src 3rdparty/googletest 3rdparty/googlemock
