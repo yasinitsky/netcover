@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SOURCE_FILES 	= src/gtest_main.cc src/gtest-all.cc
-INCLUDE_DIRS	= include .
-STATIC_LIBRARY	= gtest
-HEADERS			= include
+SOURCE_FILES    = src/gtest_main.cc src/gtest-all.cc
+INCLUDE_DIRS    = include .
+STATIC_LIBRARY  = gtest
+HEADERS         = include

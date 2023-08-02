@@ -14,6 +14,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SOURCE_FILES 	= # don't forget to add tests here
-EXECUTABLE		= tests.out
-DEPENDENCIES 	= src 3rdparty/googletest 3rdparty/googlemock
+SOURCE_FILES    = # don't forget to add tests here
+EXECUTABLE      = tests.out
+DEPENDENCIES    = src 3rdparty/googletest 3rdparty/googlemock

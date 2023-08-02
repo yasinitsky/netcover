@@ -15,14 +15,14 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Tools
-CXX 		= g++
-AR 			= ar
-ECHO 		= echo
-MKDIR 		= mkdir
+CXX         = g++
+AR          = ar
+ECHO        = echo
+MKDIR       = mkdir
 FIND        = find
 
 # Options
-CXXFLAGS 	= -Wall -pedantic -c
+CXXFLAGS    = -Wall -pedantic -c
 BUILD_ROOT  = build
 
 # Makefile.module with corresponding flags

@@ -24,19 +24,19 @@ $(error MODULE variable should be provided)
 endif
 
 # Each module may specify variables below in module-specific Makefile
-SOURCE_FILES        =	# paths to the module's source files
-INCLUDE_DIRS 		=	# paths to the directories with internal includes used to compile module
-STATIC_LIBRARY 		=	# name of the static library we want to build (without "lib" at the begining and ".a" at the end)
-EXECUTABLE			=	# name of the executable we want to build 
-HEADERS				=	# paths to headers that can be shared with another modules ("public" headers)
-DEPENDENCIES		= 	# modules to be static linked with \
-						# if current module produces static library, then only headers from dependency will be shared \
-						# otherwise static library from dependency will be linked to the current module's executable
+SOURCE_FILES        =   # paths to the module's source files
+INCLUDE_DIRS        =   # paths to the directories with internal includes used to compile module
+STATIC_LIBRARY      =   # name of the static library we want to build (without "lib" at the begining and ".a" at the end)
+EXECUTABLE          =   # name of the executable we want to build 
+HEADERS             =   # paths to headers that can be shared with another modules ("public" headers)
+DEPENDENCIES        =   # modules to be static linked with \
+                        # if current module produces static library, then only headers from dependency will be shared \
+                        # otherwise static library from dependency will be linked to the current module's executable
 CXXFLAGS            =   # C++ compiler flags (in addition to the one defined in the Makefile.config)
 
 # All the code below is the common rules for all modules. Module-specific Makefiles should not touch it
-MODULE_GETLIB		=	$(shell $(MODULE_MAKE) get-lib MODULE=$1)
-MODULE_GETHEADERS	= 	$(shell $(MODULE_MAKE) get-headers MODULE=$1)
+MODULE_GETLIB       = $(shell $(MODULE_MAKE) get-lib MODULE=$1)
+MODULE_GETHEADERS   = $(shell $(MODULE_MAKE) get-headers MODULE=$1)
 
 include Makefile.common
 include $(MODULE)/Makefile
@@ -51,8 +51,8 @@ HEADER_FILES = $(foreach dir,$(INCLUDE_DIRS),$(shell $(FIND) $(dir) -type f -nam
 $(EXECUTABLE): $(OBJECT_FILES) $(DEPENDENCIES)
 	@$(ECHO) Building $(EXECUTABLE) executable...
 	@$(CXX) $(OBJECT_FILES) $(foreach dir,$(DEPENDENCIES),-L$(BUILD_ROOT)/$(dir)) \
-		$(foreach dir,$(DEPENDENCIES),-l$(notdir $(call MODULE_GETLIB,$(dir)))) \
-		-o $(BUILD_ROOT)/$(MODULE)/$@
+	    $(foreach dir,$(DEPENDENCIES),-l$(notdir $(call MODULE_GETLIB,$(dir)))) \
+	    -o $(BUILD_ROOT)/$(MODULE)/$@
 
 $(STATIC_LIBRARY): $(OBJECT_FILES)
 	@$(ECHO) Building $(STATIC_LIBRARY) library...

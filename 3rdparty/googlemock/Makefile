@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SOURCE_FILES 	= src/gmock_main.cc src/gmock-all.cc
-INCLUDE_DIRS	= include .
-STATIC_LIBRARY	= gmock
-HEADERS			= include
-DEPENDENCIES	= 3rdparty/googletest
+SOURCE_FILES    = src/gmock_main.cc src/gmock-all.cc
+INCLUDE_DIRS    = include .
+STATIC_LIBRARY  = gmock
+HEADERS         = include
+DEPENDENCIES    = 3rdparty/googletest
