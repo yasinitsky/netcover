@@ -20,9 +20,10 @@ AR          = ar
 ECHO        = echo
 MKDIR       = mkdir
 FIND        = find
+RM          = rm
 
 # Options
-CXXFLAGS    = -Wall -pedantic -c
+CXXFLAGS    = -Wall -Wextra -Werror -pedantic -c
 BUILD_ROOT  = build
 
 # Makefile.module with corresponding flags

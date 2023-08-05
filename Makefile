@@ -16,9 +16,9 @@
 
 # This file is the main Makefile of the Netcover project
 # It encapsulates build details under the next commands:
-#		make run		- build and run netcover executable
-#		make test 		- build and run tests
-# 		make cleanup	- cleanup build directory
+#		make run        - build and run netcover executable
+#		make test       - build and run tests
+# 		make cleanup    - cleanup build directory
 # Another recipes shouldn't be used via make tool
 
 include Makefile.common
@@ -35,3 +35,7 @@ build:
 test:
 	@$(MODULE_MAKE) build-executable MODULE=test
 	@./$(BUILD_ROOT)/$(shell $(MODULE_MAKE) get-executable MODULE=test)
+
+.PHONY: cleanup
+cleanup:
+	$(RM) -rf $(BUILD_ROOT)
