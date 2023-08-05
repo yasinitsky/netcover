@@ -16,6 +16,9 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef TEST_SHELL_COMMAND_MOCK_HPP
+#define TEST_SHELL_COMMAND_MOCK_HPP
+
 #include "gmock/gmock.h"
 
 #include "shell/Command.hpp"
@@ -28,3 +31,5 @@ class CommandMock : public shell::Command {
         CommandMock() : Command(COMMAND_NAME, COMMAND_DESCRIPTION) { }
         MOCK_METHOD(shell::Result, execute, (Arguments &), (const));
 };
+
+#endif // TEST_SHELL_COMMAND_MOCK_HPP
