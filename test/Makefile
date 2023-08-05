@@ -15,5 +15,6 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SOURCE_FILES    = $(shell $(CD) $(MODULE) && $(FIND) -type f -name '*.cpp')
+INCLUDE_DIRS    = .
 EXECUTABLE      = tests.out
 DEPENDENCIES    = src 3rdparty/googletest 3rdparty/googlemock
