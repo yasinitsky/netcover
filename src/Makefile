@@ -16,7 +16,7 @@
 
 # Include main.cpp only if used like executable
 # Tests use static library produced by this module, so don't compile main.cpp in this case
-SOURCE_FILES    = $(if $(filter $(MAKECMDGOALS),build-executable),main.cpp,)
+SOURCE_FILES    = $(if $(filter $(MAKECMDGOALS),build-executable),main.cpp,) $(shell $(CD) $(MODULE) && $(FIND) -type f -name '*.cpp' -not -name main.cpp)
 INCLUDE_DIRS    = .
 EXECUTABLE      = netcover
 STATIC_LIBRARY  = netcover_static

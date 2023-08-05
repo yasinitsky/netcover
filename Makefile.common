@@ -21,6 +21,7 @@ ECHO        = echo
 MKDIR       = mkdir
 FIND        = find
 RM          = rm
+CD          = cd
 
 # Options
 CXXFLAGS    = -Wall -Wextra -Werror -pedantic -c

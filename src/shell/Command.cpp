@@ -16,24 +16,14 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#include "shell/Command.hpp"
 
-#include <cstdlib>
+using namespace shell;
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+const std::string &Command::getName() const {
+    return m_name;
+}
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
-    }
-
-    return EXIT_SUCCESS;
+const std::string &Command::getDescription() const {
+    return m_description;
 }

@@ -16,24 +16,15 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#include "gmock/gmock.h"
 
-#include <cstdlib>
+#include "shell/Command.hpp"
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+class CommandMock : public shell::Command {
+    public:
+        static const std::string COMMAND_NAME;
+        static const std::string COMMAND_DESCRIPTION;
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
-    }
-
-    return EXIT_SUCCESS;
-}
+        CommandMock() : Command(COMMAND_NAME, COMMAND_DESCRIPTION) { }
+        MOCK_METHOD(shell::Result, execute, (Arguments &), (const));
+};

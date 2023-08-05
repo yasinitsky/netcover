@@ -16,24 +16,29 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#ifndef SHELL_RESULT_HPP
+#define SHELL_RESULT_HPP
 
-#include <cstdlib>
+#include <string>
+#include <iostream>
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+namespace shell {
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
-    }
+class Result {
+    public:
+        Result(const std::string &provider) : m_status(true), m_provider(provider) {} 
 
-    return EXIT_SUCCESS;
-}
+        void setError(const std::string &description);
+        bool isOk() const;
+        friend std::ostream &operator<<(std::ostream &stream, const Result &result);
+    private:
+        bool m_status;
+        const std::string m_provider;
+        std::string m_description;
+};
+
+std::ostream &operator<<(std::ostream &stream, const Result &result);
+
+} // namespace shell
+
+#endif // SHELL_RESULT_HPP

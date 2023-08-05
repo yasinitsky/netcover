@@ -16,24 +16,27 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#ifndef SHELL_COMMANDS_MANAGER_HPP
+#define SHELL_COMMANDS_MANAGER_HPP
 
-#include <cstdlib>
+#include "misc/Singleton.hpp"
+#include "shell/Command.hpp"
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+#include <unordered_map>
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
-    }
+namespace shell {
 
-    return EXIT_SUCCESS;
-}
+class CommandsManager : public misc::Singleton<CommandsManager> {
+    public:
+        CommandsManager() = default;
+
+        void registerCommand(Command *command);
+        Command *findCommand(const std::string &name);
+        
+    private:
+        std::unordered_map<std::string, Command *> m_commands;
+};
+
+} // namespace shell
+
+#endif // SHELL_COMMANDS_MANAGER_HPP

@@ -16,24 +16,25 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#ifndef MISC_SINGLETON_HPP
+#define MISC_SINGLETON_HPP
 
-#include <cstdlib>
+namespace misc {
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+template <typename T>
+class Singleton {
+    public:
+        Singleton() = default;
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
+        Singleton(const Singleton &) = delete;
+        Singleton &operator=(const Singleton &) = delete;
+
+        static T &getInstance() {
+            static T instance;
+            return instance;
         }
-    }
+};
 
-    return EXIT_SUCCESS;
-}
+} // namespace misc
+
+#endif // MISC_SINGLETON_HPP

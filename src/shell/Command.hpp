@@ -16,24 +16,34 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#ifndef SHELL_COMMAND_HPP
+#define SHELL_COMMAND_HPP
 
-#include <cstdlib>
+#include "shell/Result.hpp"
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+#include <string>
+#include <vector>
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
+namespace shell {
+
+class Command {
+    public:
+        using Arguments = std::vector<std::string>;
+
+        virtual Result execute(Arguments &arguments) const = 0;
+        
+        const std::string &getName() const;
+        const std::string &getDescription() const;
+
+    private:
+        const std::string m_name;
+        const std::string m_description;
     
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
-    }
+    protected:
+        Command(const std::string &name, const std::string &description): m_name(name), m_description(description) { }
+        virtual ~Command() { }
+};
 
-    return EXIT_SUCCESS;
-}
+} // namespace shell
+
+#endif // SHELL_COMMAND_HPP

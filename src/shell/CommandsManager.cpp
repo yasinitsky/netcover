@@ -16,24 +16,18 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "shell/Prompt.hpp"
+#include "shell/CommandsManager.hpp"
 
-#include <cstdlib>
+using namespace shell;
 
-int main(int argc, char *argv[]) {
-    (void) argc;
-    (void) argv;
+void CommandsManager::registerCommand(Command *command) {
+    m_commands.insert(std::make_pair(command->getName(), command));
+}
 
-    shell::Prompt &prompt = shell::Prompt::getInstance();
-    prompt.setInputStream(&std::cin);
-    prompt.setOutputStream(&std::cout);
-    
-    while(true) {
-        shell::Result result = prompt.ask();
-        if(!result.isOk()) {
-            std::cout << result;
-        }
+Command *CommandsManager::findCommand(const std::string &name) {
+    if(m_commands.find(name) == m_commands.end()) {
+        return nullptr;
     }
 
-    return EXIT_SUCCESS;
+    return m_commands[name];
 }
