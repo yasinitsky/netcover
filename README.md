@@ -1,7 +1,12 @@
 # Build and test
-To build a project from source, run `make build`. As a result, you will get `build/netcover` executable.<br/>
-To build and run unittests, run `make test`.<br/>
-To clean up the build folder, use `make cleanup`.
+Netcover uses GNU Make-based build infrastructure.
+
+Available rules:
+- `make run` - build and run project
+- `make test` - build and run tests
+- `make cleanup` - cleanup project folder after build
+
+For implementation details see [Makefile](./Makefile). 
 # License
 ```
 Netcover is free software; you can redistribute it and/or modify it under
