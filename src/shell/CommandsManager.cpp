@@ -31,3 +31,28 @@ Command *CommandsManager::findCommand(const std::string &name) {
 
     return m_commands[name];
 }
+
+CommandsManager::Iterator CommandsManager::begin() {
+    return Iterator(m_commands.begin());
+}
+
+CommandsManager::Iterator CommandsManager::end() {
+    return Iterator(m_commands.end());
+}
+
+CommandsManager::Iterator::reference CommandsManager::Iterator::operator*() const {
+    return m_current->second;
+}
+
+CommandsManager::Iterator::pointer CommandsManager::Iterator::operator->() {
+    return &m_current->second;
+}
+
+CommandsManager::Iterator &CommandsManager::Iterator::operator++() {
+    ++m_current;
+    return *this;
+}
+
+bool shell::operator!=(const CommandsManager::Iterator &a, const CommandsManager::Iterator &b) {
+    return (a.m_current != b.m_current);
+}

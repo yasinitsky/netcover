@@ -21,6 +21,8 @@
 #include "shell/CommandsManager.hpp"
 #include "CommandMock.hpp"
 
+using testing::ElementsAre;
+
 class CommandsManagerTest : public testing::Test {
     protected:
         shell::CommandsManager &m_cm = shell::CommandsManager::getInstance();
@@ -28,6 +30,7 @@ class CommandsManagerTest : public testing::Test {
 
         void SetUp() {
             m_testCommand = new CommandMock();
+            m_cm.registerCommand(m_testCommand);
         }
 
         void TearDown() {
@@ -36,12 +39,20 @@ class CommandsManagerTest : public testing::Test {
         }
 };
 
-TEST_F(CommandsManagerTest, shouldRegisterAndFindCommand) {
-    m_cm.registerCommand(m_testCommand);
-
+TEST_F(CommandsManagerTest, shouldFindCommand) {
     ASSERT_EQ(m_cm.findCommand(CommandMock::COMMAND_NAME), m_testCommand);
 }
 
 TEST_F(CommandsManagerTest, shouldFindCommandFailWhenCommandDoesNotExist) {
     ASSERT_EQ(m_cm.findCommand("invalid_command"), nullptr);
+}
+
+TEST_F(CommandsManagerTest, shouldIterateOverCommands) {
+    std::vector<shell::Command *> commands;
+
+    for(auto &command : m_cm) {
+        commands.push_back(command);
+    }
+
+    ASSERT_THAT(commands, ElementsAre(m_testCommand));
 }
