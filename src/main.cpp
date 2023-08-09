@@ -17,6 +17,9 @@
 */
 
 #include "shell/Prompt.hpp"
+#include "shell/CommandsManager.hpp"
+#include "misc/RuntimeData.hpp"
+#include "commands/ExitCommand.hpp"
 
 #include <cstdlib>
 
@@ -27,13 +30,20 @@ int main(int argc, char *argv[]) {
     shell::Prompt &prompt = shell::Prompt::getInstance();
     prompt.setInputStream(&std::cin);
     prompt.setOutputStream(&std::cout);
-    
-    while(true) {
+
+    shell::CommandsManager &cm = shell::CommandsManager::getInstance();
+    commands::ExitCommand *exitCommand = new commands::ExitCommand{};
+    cm.registerCommand(exitCommand);
+
+    misc::RuntimeData::runShell = true;
+    while(misc::RuntimeData::runShell) {
         shell::Result result = prompt.ask();
         if(!result.isOk()) {
             std::cout << result;
         }
     }
+
+    delete exitCommand;
 
     return EXIT_SUCCESS;
 }
