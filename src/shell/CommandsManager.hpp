@@ -49,6 +49,7 @@ class CommandsManager : public misc::Singleton<CommandsManager> {
         };
 
         CommandsManager() = default;
+        ~CommandsManager();
 
         void registerCommand(Command *command);
         Command *findCommand(const std::string &name);

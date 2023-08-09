@@ -30,6 +30,8 @@ class Command {
     public:
         using Arguments = std::vector<std::string>;
 
+        virtual ~Command() { }
+
         virtual Result execute(Arguments &arguments) const = 0;
         
         const std::string &getName() const;
@@ -41,7 +43,6 @@ class Command {
     
     protected:
         Command(const std::string &name, const std::string &description): m_name(name), m_description(description) { }
-        virtual ~Command() { }
 };
 
 } // namespace shell

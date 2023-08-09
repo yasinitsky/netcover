@@ -56,3 +56,9 @@ CommandsManager::Iterator &CommandsManager::Iterator::operator++() {
 bool shell::operator!=(const CommandsManager::Iterator &a, const CommandsManager::Iterator &b) {
     return (a.m_current != b.m_current);
 }
+
+CommandsManager::~CommandsManager() {
+    for(auto &command : *this) {
+        delete command;
+    }
+}

@@ -32,8 +32,7 @@ int main(int argc, char *argv[]) {
     prompt.setOutputStream(&std::cout);
 
     shell::CommandsManager &cm = shell::CommandsManager::getInstance();
-    commands::ExitCommand *exitCommand = new commands::ExitCommand{};
-    cm.registerCommand(exitCommand);
+    cm.registerCommand(new commands::ExitCommand{});
 
     misc::RuntimeData::runShell = true;
     while(misc::RuntimeData::runShell) {
@@ -42,8 +41,6 @@ int main(int argc, char *argv[]) {
             std::cout << result;
         }
     }
-
-    delete exitCommand;
 
     return EXIT_SUCCESS;
 }
