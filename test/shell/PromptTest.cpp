@@ -86,6 +86,16 @@ TEST_F(PromptTest, shouldAskExecuteCommandWithQuotedArgumentsWithSpaces) {
     ASSERT_TRUE(m_prompt.ask().isOk());
 }
 
+TEST_F(PromptTest, shouldAskExecuteCommandWithEmptyQuotedArgument) {
+    m_istream.str(CommandMock::COMMAND_NAME + " arg1    \"\"   \"quoted 2\"");
+    m_istream.clear();
+
+    EXPECT_CALL(*m_command, execute(ElementsAre("arg1", "", "quoted 2")))
+            .WillOnce(Return(shell::Result{CommandMock::COMMAND_NAME}));
+
+    ASSERT_TRUE(m_prompt.ask().isOk());
+}
+
 TEST_F(PromptTest, shouldAskReturnErrorWhenTryingToPassIncompleteArguments) {
     m_istream.str(CommandMock::COMMAND_NAME + " arg1    \"quoted 1\\\"\"   \"quoted 2");
     m_istream.clear();

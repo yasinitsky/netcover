@@ -67,7 +67,7 @@ Result Prompt::parseInput(const std::string &input, std::string &command, Comman
             return result;
         }
 
-        if(token.length() != 0) arguments.push_back(token);
+        arguments.push_back(token);
     }
 
     return result;
