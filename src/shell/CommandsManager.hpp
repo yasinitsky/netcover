@@ -56,6 +56,8 @@ class CommandsManager : public misc::Singleton<CommandsManager> {
 
         Iterator begin();
         Iterator end();
+
+        void clear();
 };
 
 bool operator!=(const CommandsManager::Iterator &a, const CommandsManager::Iterator &b);

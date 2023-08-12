@@ -36,6 +36,7 @@ class CommandsManagerTest : public testing::Test {
         void TearDown() {
             delete m_testCommand;
             m_testCommand = nullptr;
+            m_cm.clear();
         }
 };
 

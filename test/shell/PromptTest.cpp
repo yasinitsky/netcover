@@ -30,18 +30,20 @@ class PromptTest : public testing::Test {
         CommandMock *m_command;
         std::istringstream m_istream;
         std::ostringstream m_ostream;
+        shell::CommandsManager &m_cm = shell::CommandsManager::getInstance();
 
         void SetUp() {
-            shell::CommandsManager &cm = shell::CommandsManager::getInstance();
             m_command = new CommandMock();
 
             m_prompt.setInputStream(&m_istream);
             m_prompt.setOutputStream(&m_ostream);
-            cm.registerCommand(m_command);
+            m_cm.registerCommand(m_command);
         }
 
         void TearDown() {
             delete m_command;
+            m_command = nullptr;
+            m_cm.clear();
         }
 };
 

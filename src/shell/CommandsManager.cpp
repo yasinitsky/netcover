@@ -62,3 +62,7 @@ CommandsManager::~CommandsManager() {
         delete command;
     }
 }
+
+void CommandsManager::clear() {
+    m_commands.clear();
+}
