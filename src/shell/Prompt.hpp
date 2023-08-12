@@ -39,8 +39,8 @@ class Prompt : public misc::Singleton<Prompt> {
         std::ostream *m_outputStream;
         CommandsManager &m_cm;
 
-        void parseInput(const std::string &input, std::string &command, Command::Arguments &arguments) const;
-        std::size_t getNextWord(const std::string &input, std::string &word, std::size_t pos = 0) const;
+        Result parseInput(const std::string &input, std::string &command, Command::Arguments &arguments) const;
+        std::size_t getNextToken(const std::string &input, std::string &token, std::size_t pos = 0) const;
         bool isSpace(const char character) const;
     public:
         Prompt() : m_cm(CommandsManager::getInstance()) {}

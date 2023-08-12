@@ -18,6 +18,8 @@
 
 #include "shell/Prompt.hpp"
 
+#include <regex>
+
 using namespace shell;
 
 const std::string Prompt::DEFAULT_PROMPT = std::string{"netcover> "};
@@ -39,10 +41,8 @@ const Result Prompt::ask() const {
 
     std::string commandName;
     Command::Arguments arguments;
-    parseInput(input, commandName, arguments);
-    
-    Result result{commandName};
-    if(commandName.length() == 0) {
+    Result result = parseInput(input, commandName, arguments);    
+    if(commandName.length() == 0 || !result.isOk()) {
         return result;
     }
 
@@ -55,29 +55,56 @@ const Result Prompt::ask() const {
     return command->execute(arguments);
 }
 
-void Prompt::parseInput(const std::string &input, std::string &command, Command::Arguments &arguments) const {
-    std::size_t pos = getNextWord(input, command);
+Result Prompt::parseInput(const std::string &input, std::string &command, Command::Arguments &arguments) const {
+    std::size_t pos = getNextToken(input, command);
+    Result result{command};
     
-    while(true) {
-        std::string word;
-        pos = getNextWord(input, word, pos);
+    while(pos < input.length()) {
+        std::string token;
+        pos = getNextToken(input, token, pos);
+        if(pos == std::string::npos) {
+            result.setError("missing closing quote");
+            return result;
+        }
 
-        if(word.size() == 0) break;
-
-        arguments.push_back(word);
+        if(token.length() != 0) arguments.push_back(token);
     }
+
+    return result;
 }
 
-std::size_t Prompt::getNextWord(const std::string &input, std::string &word, std::size_t pos) const {
-    while(pos < input.size()) {
+std::size_t Prompt::getNextToken(const std::string &input, std::string &token, std::size_t pos) const {
+    // skip whitespaces before token
+    while(pos < input.length()) {
         if(!isSpace(input[pos])) break;
         pos++;
     }
 
-    while(pos < input.size()) {
-        if(isSpace(input[pos])) break;
+    char curr = input[pos];
+    if(curr == '"') { // quoted token
+        char prev = '"';
+        pos++;
+        while(pos < input.length()) {
+            curr = input[pos++];
+            if(curr == '"') {
+                if(prev != '\\') return pos;
 
-        word += input[pos++];
+                token.pop_back();
+            }
+
+            token += curr;
+            prev = curr;
+        }
+        
+        return std::string::npos;
+    } else { // regular token
+        while(pos < input.length()) {
+            curr = input[pos];
+            if(isSpace(curr) || curr == '"') return pos;
+
+            pos++;
+            token += curr;
+        }
     }
 
     return pos;
