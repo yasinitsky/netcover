@@ -18,9 +18,12 @@
 
 #include "shell/Prompt.hpp"
 
+#include "misc/CharTypes.hpp"
+
 #include <regex>
 
 using namespace shell;
+using misc::CharTypes;
 
 const std::string Prompt::DEFAULT_PROMPT = std::string{"netcover> "};
 const std::string Prompt::SHELL_RESULT_PROVIDER = std::string{"shell"};
@@ -76,7 +79,7 @@ Result Prompt::parseInput(const std::string &input, std::string &command, Comman
 std::size_t Prompt::getNextToken(const std::string &input, std::string &token, std::size_t pos) const {
     // skip whitespaces before token
     while(pos < input.length()) {
-        if(!isSpace(input[pos])) break;
+        if(!CharTypes::isSpace(input[pos])) break;
         pos++;
     }
 
@@ -100,7 +103,7 @@ std::size_t Prompt::getNextToken(const std::string &input, std::string &token, s
     } else { // regular token
         while(pos < input.length()) {
             curr = input[pos];
-            if(isSpace(curr) || curr == '"') return pos;
+            if(CharTypes::isSpace(curr) || curr == '"') return pos;
 
             pos++;
             token += curr;
@@ -108,8 +111,4 @@ std::size_t Prompt::getNextToken(const std::string &input, std::string &token, s
     }
 
     return pos;
-}
-
-bool Prompt::isSpace(const char character) const {
-    return std::isspace(static_cast<unsigned char>(character));
 }
